@@ -37,8 +37,8 @@ class NeuralNetwork(nn.Module):
         self.conv2 = nn.Conv2d(16, 32, 3,padding=1)   #after conv becomes -> 32,32,32 ->pool -> 32,16,16
         self.conv3 = nn.Conv2d(32, 64, 3,padding=1)    #after conv becomes -> 64,16,16
         self.conv4 = nn.Conv2d(64, 100, 3,padding=1)    #after conv becomes -> 100,16,16 ->pool -> 100,8,8
-        self.fc1 = nn.Linear(100 * 8 * 8, 120)
-        self.fc2 = nn.Linear(120, 10)
+        self.fc1 = nn.Linear(100 * 8 * 8, 10)
+        # self.fc2 = nn.Linear(120, 10)
         # self.fc3 = nn.Linear(84, 10)
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -46,10 +46,10 @@ class NeuralNetwork(nn.Module):
         x = F.relu(self.conv3(x))
         x = self.pool(F.relu(self.conv4(x)))
         x = torch.flatten(x, 1)
-        x = F.relu(self.fc1(x))
+        # x = F.relu(self.fc1(x))
         x = self.dropout(x)
         # x = F.relu(self.fc2(x))
-        x = self.fc2(x)
+        x = self.fc1(x)
         return x
 
 
@@ -61,7 +61,7 @@ classifier = NeuralNetwork().to(device)
 lossFn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(classifier.parameters(), lr=0.001)
 
-epochs = 25
+epochs = 35
 losses=[]
 # try:
 for epoch in range(epochs):
