@@ -61,7 +61,7 @@ classifier = NeuralNetwork().to(device)
 lossFn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(classifier.parameters(), lr=0.0001)
 
-epochs = 45
+epochs = 25
 losses=[]
 # try:
 for epoch in range(epochs):
