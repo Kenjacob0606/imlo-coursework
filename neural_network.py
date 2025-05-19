@@ -59,7 +59,7 @@ classifier = NeuralNetwork().to(device)
 #Set Training Parameters
 
 lossFn = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(classifier.parameters(), lr=0.0001)
+optimizer = torch.optim.Adam(classifier.parameters(), lr=0.001)
 
 epochs = 25
 losses=[]
@@ -82,7 +82,7 @@ torch.save(classifier.state_dict(), "model_interrupted.pth")
 
 #Evaluation
 
-classifier.eval()
+# classifier.eval()
 val_loss = 0
 correct = 0
 total = 0
@@ -101,10 +101,10 @@ print(f"Validation Loss: {avg_val_loss:.3f}")
 accuracy = 100 * correct / total
 print(f"Validation Accuracy: {accuracy:.3f}%")
 
-#plot the loss v epoch graph
+# plot the loss v epoch graph
 
 plt.plot(range(epochs), losses)
-plt.plot(48, [avg_val_loss], "g+")
+plt.plot(epochs, [avg_val_loss], "g+")
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
 plt.title("Loss vs Epochs")
