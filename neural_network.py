@@ -35,15 +35,15 @@ class NeuralNetwork(nn.Module):
         self.pool = nn.MaxPool2d(2, 2)
         self.dropout = nn.Dropout(0.3)
         self.conv2 = nn.Conv2d(16, 32, 3,padding=1)   #after conv becomes -> 32,32,32 ->pool -> 32,16,16
-        self.conv3 = nn.Conv2d(32, 64, 3,padding=1)    #after conv becomes -> 64,16,16
-        self.conv4 = nn.Conv2d(64, 120, 3,padding=1)    #after conv becomes -> 100,16,16 ->pool -> 100,8,8
-        self.fc1 = nn.Linear(120 * 8 * 8, 60)
+        self.conv3 = nn.Conv2d(32, 64, 3,padding=1)    #after conv becomes -> 64,16,16 -> pool -> 64,8,8
+        self.conv4 = nn.Conv2d(64, 120, 3,padding=1)    #after conv becomes -> 120,8,8 ->pool -> 120,4,4
+        self.fc1 = nn.Linear(120 * 4 * 4, 60)
         self.fc2 = nn.Linear(60, 10)
         # self.fc3 = nn.Linear(84, 10)
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = self.pool(F.relu(self.conv2(x)))
-        x = F.relu(self.conv3(x))
+        x = self.pool(F.relu(self.conv3(x)))
         x = self.dropout(x)
         x = self.pool(F.relu(self.conv4(x)))
         x = torch.flatten(x, 1)
@@ -113,50 +113,51 @@ plt.show()
 
 
 
-# Epoch 0 - Loss: 1.85697
-# Epoch 1 - Loss: 1.54594
-# Epoch 2 - Loss: 1.44595
-# Epoch 3 - Loss: 1.37319
-# Epoch 4 - Loss: 1.31068
-# Epoch 5 - Loss: 1.26490
-# Epoch 6 - Loss: 1.22526
-# Epoch 7 - Loss: 1.18954
-# Epoch 8 - Loss: 1.15532
-# Epoch 9 - Loss: 1.12318
-# Epoch 10 - Loss: 1.08905
-# Epoch 11 - Loss: 1.05476
-# Epoch 12 - Loss: 1.02265
-# Epoch 13 - Loss: 0.99348
-# Epoch 14 - Loss: 0.96467
-# Epoch 15 - Loss: 0.93694
-# Epoch 16 - Loss: 0.91208
-# Epoch 17 - Loss: 0.88892
-# Epoch 18 - Loss: 0.86787
-# Epoch 19 - Loss: 0.84616
-# Epoch 20 - Loss: 0.82520
-# Epoch 21 - Loss: 0.81167
-# Epoch 22 - Loss: 0.79258
-# Epoch 23 - Loss: 0.76937
-# Epoch 24 - Loss: 0.75157
-# Epoch 25 - Loss: 0.73688
-# Epoch 26 - Loss: 0.72333
-# Epoch 27 - Loss: 0.70655
-# Epoch 28 - Loss: 0.69130
-# Epoch 29 - Loss: 0.67547
-# Epoch 30 - Loss: 0.66061
-# Epoch 31 - Loss: 0.64559
-# Epoch 32 - Loss: 0.63485
-# Epoch 33 - Loss: 0.61795
-# Epoch 34 - Loss: 0.60833
-# Epoch 35 - Loss: 0.59324
-# Epoch 36 - Loss: 0.57909
-# Epoch 37 - Loss: 0.56522
-# Epoch 38 - Loss: 0.54946
-# Epoch 39 - Loss: 0.53741
-# Epoch 40 - Loss: 0.52521
-# Epoch 41 - Loss: 0.50916
-# Epoch 42 - Loss: 0.49975
-# Epoch 43 - Loss: 0.48724
-# Epoch 44 - Loss: 0.47528
-# Validation Loss: 0.871
-# Validation Accuracy: 71.520%
+# Epoch 0 - Loss: 1.94446
+# Epoch 1 - Loss: 1.65692
+# Epoch 2 - Loss: 1.53892
+# Epoch 3 - Loss: 1.46507
+# Epoch 4 - Loss: 1.41291
+# Epoch 5 - Loss: 1.37075
+# Epoch 6 - Loss: 1.32934
+# Epoch 7 - Loss: 1.29003
+# Epoch 8 - Loss: 1.25390
+# Epoch 9 - Loss: 1.21753
+# Epoch 10 - Loss: 1.18599
+# Epoch 11 - Loss: 1.15503
+# Epoch 12 - Loss: 1.12436
+# Epoch 13 - Loss: 1.09524
+# Epoch 14 - Loss: 1.06935
+# Epoch 15 - Loss: 1.04048
+# Epoch 16 - Loss: 1.02044
+# Epoch 17 - Loss: 0.99666
+# Epoch 18 - Loss: 0.97373
+# Epoch 19 - Loss: 0.95285
+# Epoch 20 - Loss: 0.93035
+# Epoch 21 - Loss: 0.90984
+# Epoch 22 - Loss: 0.89374
+# Epoch 23 - Loss: 0.87603
+# Epoch 24 - Loss: 0.85750
+# Epoch 25 - Loss: 0.83945
+# Epoch 26 - Loss: 0.82293
+# Epoch 27 - Loss: 0.80566
+# Epoch 28 - Loss: 0.79025
+# Epoch 29 - Loss: 0.77872
+# Epoch 30 - Loss: 0.76591
+# Epoch 31 - Loss: 0.75258
+# Epoch 32 - Loss: 0.73963
+# Epoch 33 - Loss: 0.72287
+# Epoch 34 - Loss: 0.71305
+# Epoch 35 - Loss: 0.70063
+# Epoch 36 - Loss: 0.68784
+# Epoch 37 - Loss: 0.67809
+# Epoch 38 - Loss: 0.66655
+# Epoch 39 - Loss: 0.65703
+# Epoch 40 - Loss: 0.64250
+# Epoch 41 - Loss: 0.63014
+# Epoch 42 - Loss: 0.61991
+# Epoch 43 - Loss: 0.60783
+# Epoch 44 - Loss: 0.60106
+# Validation Loss: 0.881
+# Validation Accuracy: 70.700%
+# approx 20min
