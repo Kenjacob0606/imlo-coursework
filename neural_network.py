@@ -62,7 +62,7 @@ classifier = NeuralNetwork().to(device)
 lossFn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(classifier.parameters(), lr=0.0001)
 
-epochs = 65
+epochs = 55
 losses=[]
 # try:
 for epoch in range(epochs):
@@ -110,3 +110,63 @@ plt.xlabel("Epochs")
 plt.ylabel("Loss")
 plt.title("Loss vs Epochs")
 plt.show()
+
+
+
+# Epoch 0 - Loss: 1.83195
+# Epoch 1 - Loss: 1.51365
+# Epoch 2 - Loss: 1.39197
+# Epoch 3 - Loss: 1.30907
+# Epoch 4 - Loss: 1.24695
+# Epoch 5 - Loss: 1.19793
+# Epoch 6 - Loss: 1.15054
+# Epoch 7 - Loss: 1.10460
+# Epoch 8 - Loss: 1.06458
+# Epoch 9 - Loss: 1.03018
+# Epoch 10 - Loss: 0.99461
+# Epoch 11 - Loss: 0.96705
+# Epoch 12 - Loss: 0.93708
+# Epoch 13 - Loss: 0.91223
+# Epoch 14 - Loss: 0.89065
+# Epoch 15 - Loss: 0.86682
+# Epoch 16 - Loss: 0.84595
+# Epoch 17 - Loss: 0.82760
+# Epoch 18 - Loss: 0.80910
+# Epoch 19 - Loss: 0.79458
+# Epoch 20 - Loss: 0.77705
+# Epoch 21 - Loss: 0.75857
+# Epoch 22 - Loss: 0.74096
+# Epoch 23 - Loss: 0.72775
+# Epoch 24 - Loss: 0.71129
+# Epoch 25 - Loss: 0.69478
+# Epoch 26 - Loss: 0.68191
+# Epoch 27 - Loss: 0.66668
+# Epoch 28 - Loss: 0.65504
+# Epoch 29 - Loss: 0.63920
+# Epoch 30 - Loss: 0.62539
+# Epoch 31 - Loss: 0.61524
+# Epoch 32 - Loss: 0.60195
+# Epoch 33 - Loss: 0.58661
+# Epoch 34 - Loss: 0.57305
+# Epoch 35 - Loss: 0.56155
+# Epoch 36 - Loss: 0.55094
+# Epoch 37 - Loss: 0.53762
+# Epoch 38 - Loss: 0.52656
+# Epoch 39 - Loss: 0.51483
+# Epoch 40 - Loss: 0.50436
+# Epoch 41 - Loss: 0.49353
+# Epoch 42 - Loss: 0.48311
+# Epoch 43 - Loss: 0.47146
+# Epoch 44 - Loss: 0.46016
+# Epoch 45 - Loss: 0.45172
+# Epoch 46 - Loss: 0.43833
+# Epoch 47 - Loss: 0.43313
+# Epoch 48 - Loss: 0.42147
+# Epoch 49 - Loss: 0.41527
+# Epoch 50 - Loss: 0.39894
+# Epoch 51 - Loss: 0.39183
+# Epoch 52 - Loss: 0.38006
+# Epoch 53 - Loss: 0.37402
+# Epoch 54 - Loss: 0.36454
+# Validation Loss: 0.979
+# Validation Accuracy: 71.040%
