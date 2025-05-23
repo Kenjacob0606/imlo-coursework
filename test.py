@@ -37,9 +37,11 @@ class NeuralNetwork(nn.Module):
 
 #load trained model
 new_classifier = NeuralNetwork().to(device)
-new_classifier.load_state_dict(torch.load("classifier.pth"))
+new_classifier.load_state_dict(torch.load("classifierC.pth"))
 
 #Evaluation with test set
+
+new_classifier.eval()
 lossFn = nn.CrossEntropyLoss()
 test_loss = 0
 correct = 0
@@ -56,6 +58,6 @@ with torch.no_grad():
         correct += (predicted==labels).sum().item()
     avg_test_loss = test_loss / len(test_loader)
 
-print(f"Final Validation Loss: {avg_test_loss:.3f}")
+print(f"Final Test Loss: {avg_test_loss:.3f}")
 accuracy = 100 * correct / total
-print(f"Validation Accuracy: {accuracy:.3f}%")
+print(f"Test Accuracy: {accuracy:.3f}%")

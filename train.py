@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 #GETTING AND LOADING DATA
 
 device = torch.device("cpu")
-train_transform = transforms.Compose([ transforms.ToTensor(), transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))])
-# transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.48, 0.45, 0.4), (0.229, 0.224, 0.225))])
 
-training_set = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform)
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))])
+
+training_set = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
 #split train set into train and validation set
 trainSet_size = int(0.8 * len(training_set))
 valSet_size = len(training_set) - trainSet_size
@@ -22,7 +22,6 @@ trainSet, valSet = torch.utils.data.random_split(training_set, [trainSet_size, v
 train_loader = DataLoader(trainSet, batch_size=64, shuffle=True)
 val_loader = DataLoader(valSet, batch_size=64, shuffle=False)
 
-# valSet.dataset.transform = transform
 
 #Neural Network Architecture
 
@@ -77,27 +76,27 @@ for epoch in range(epochs):
     losses.append(epoch_loss)
     print(f"Epoch {epoch} - Loss: {epoch_loss:.5f}")
 
-    #validation
-    val_loss = 0
-    correct = 0
-    total = 0
-    classifier.eval()
-    with torch.no_grad():
-        for images, labels in val_loader:
-            images, labels = images.to(device), labels.to(device)
-            outputs = classifier(images)
-            loss = lossFn(outputs, labels)
-            val_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted==labels).sum().item()
-        avg_val_loss = val_loss / len(val_loader)
-        print(f"Validation Loss: {avg_val_loss:.3f}")
-print(f"Final Validation Loss: {avg_val_loss:.3f}")
+torch.save(classifier.state_dict(), "classifierC.pth")
+
+#Evaluation
+
+val_loss = 0
+correct = 0
+total = 0
+with torch.no_grad():
+    for images, labels in val_loader:
+        images, labels = images.to(device), labels.to(device)
+        outputs = classifier(images)
+        loss = lossFn(outputs, labels)
+        val_loss += loss.item()
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted==labels).sum().item()
+    avg_val_loss = val_loss / len(val_loader)
+
+print(f"Validation Loss: {avg_val_loss:.3f}")
 accuracy = 100 * correct / total
 print(f"Validation Accuracy: {accuracy:.3f}%")
-
-torch.save(classifier.state_dict(), "classifierB.pth")
 
 # plot the loss v epoch graph
 
@@ -107,3 +106,56 @@ plt.xlabel("Epochs")
 plt.ylabel("Loss")
 plt.title("Loss vs Epochs")
 plt.show()
+
+
+
+# Epoch 0 - Loss: 1.85374
+# Epoch 1 - Loss: 1.51614
+# Epoch 2 - Loss: 1.41797
+# Epoch 3 - Loss: 1.35645
+# Epoch 4 - Loss: 1.31103
+# Epoch 5 - Loss: 1.26362
+# Epoch 6 - Loss: 1.21913
+# Epoch 7 - Loss: 1.17825
+# Epoch 8 - Loss: 1.13432
+# Epoch 9 - Loss: 1.09679
+# Epoch 10 - Loss: 1.05514
+# Epoch 11 - Loss: 1.02525
+# Epoch 12 - Loss: 0.99229
+# Epoch 13 - Loss: 0.96318
+# Epoch 14 - Loss: 0.93845
+# Epoch 15 - Loss: 0.91480
+# Epoch 16 - Loss: 0.89538
+# Epoch 17 - Loss: 0.87370
+# Epoch 18 - Loss: 0.85213
+# Epoch 19 - Loss: 0.83650
+# Epoch 20 - Loss: 0.81969
+# Epoch 21 - Loss: 0.79909
+# Epoch 22 - Loss: 0.78152
+# Epoch 23 - Loss: 0.76587
+# Epoch 24 - Loss: 0.74833
+# Epoch 25 - Loss: 0.73289
+# Epoch 26 - Loss: 0.71825
+# Epoch 27 - Loss: 0.70378
+# Epoch 28 - Loss: 0.68873
+# Epoch 29 - Loss: 0.67081
+# Epoch 30 - Loss: 0.65732
+# Epoch 31 - Loss: 0.64315
+# Epoch 32 - Loss: 0.62826
+# Epoch 33 - Loss: 0.61115
+# Epoch 34 - Loss: 0.60118
+# Epoch 35 - Loss: 0.58354
+# Epoch 36 - Loss: 0.57367
+# Epoch 37 - Loss: 0.55655
+# Epoch 38 - Loss: 0.54475
+# Epoch 39 - Loss: 0.52916
+# Epoch 40 - Loss: 0.52055
+# Epoch 41 - Loss: 0.50681
+# Epoch 42 - Loss: 0.48956
+# Epoch 43 - Loss: 0.48056
+# Epoch 44 - Loss: 0.46679
+# Epoch 45 - Loss: 0.45497
+# Epoch 46 - Loss: 0.44101
+# Epoch 47 - Loss: 0.42838
+# Validation Loss: 0.890
+# Validation Accuracy: 72.160%
