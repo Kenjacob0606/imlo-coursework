@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 #GETTING AND LOADING DATA
 
 device = torch.device("cpu")
-train_transform = transforms.Compose([ transforms.ToTensor(), transforms.Normalize((0.48, 0.45, 0.4), (0.229, 0.224, 0.225))])
+train_transform = transforms.Compose([ transforms.ToTensor(), transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))])
 # transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.48, 0.45, 0.4), (0.229, 0.224, 0.225))])
 
 training_set = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform)
@@ -97,7 +97,7 @@ print(f"Final Validation Loss: {avg_val_loss:.3f}")
 accuracy = 100 * correct / total
 print(f"Validation Accuracy: {accuracy:.3f}%")
 
-torch.save(classifier.state_dict(), "classifier.pth")
+torch.save(classifier.state_dict(), "classifierB.pth")
 
 # plot the loss v epoch graph
 
