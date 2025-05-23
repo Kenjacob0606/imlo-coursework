@@ -1,0 +1,109 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torchvision
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
+
+#GETTING AND LOADING DATA
+
+device = torch.device("cpu")
+train_transform = transforms.Compose([ transforms.ToTensor(), transforms.Normalize((0.48, 0.45, 0.4), (0.229, 0.224, 0.225))])
+# transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.48, 0.45, 0.4), (0.229, 0.224, 0.225))])
+
+training_set = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform)
+#split train set into train and validation set
+trainSet_size = int(0.8 * len(training_set))
+valSet_size = len(training_set) - trainSet_size
+trainSet, valSet = torch.utils.data.random_split(training_set, [trainSet_size, valSet_size])
+
+#load train and validation set
+train_loader = DataLoader(trainSet, batch_size=64, shuffle=True)
+val_loader = DataLoader(valSet, batch_size=64, shuffle=False)
+
+# valSet.dataset.transform = transform
+
+#Neural Network Architecture
+
+class NeuralNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 16, 3,padding=1)    #after conv becomes -> 16,32,32
+        self.pool = nn.MaxPool2d(2, 2)
+        self.dropout = nn.Dropout(0.3)
+        self.conv2 = nn.Conv2d(16, 32, 3,padding=1)   #after conv becomes -> 32,32,32 ->pool -> 32,16,16
+        self.conv3 = nn.Conv2d(32, 64, 3,padding=1)    #after conv becomes -> 64,16,16
+        self.conv4 = nn.Conv2d(64, 120, 3,padding=1)    #after conv becomes -> 100,16,16 ->pool -> 100,8,8
+        self.fc1 = nn.Linear(120 * 8 * 8, 60)
+        self.fc2 = nn.Linear(60, 10)
+        # self.fc3 = nn.Linear(84, 10)
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = F.relu(self.conv3(x))
+        x = self.dropout(x)
+        x = self.pool(F.relu(self.conv4(x)))
+        x = torch.flatten(x, 1)
+        x = F.relu(self.fc1(x))
+        # x = self.dropout(x)
+        # x = F.relu(self.fc2(x))
+        x = self.fc2(x)
+        return x
+
+
+#inititalize model
+classifier = NeuralNetwork().to(device)
+
+#Set Training Parameters
+
+lossFn = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(classifier.parameters(), lr=0.0001)
+
+epochs = 48
+losses=[]
+# try:
+for epoch in range(epochs):
+    running_loss = 0
+    for images, labels in train_loader:
+        images, labels = images.to(device), labels.to(device)
+        optimizer.zero_grad()
+        output = classifier(images)
+        loss = lossFn(output, labels)
+        running_loss += loss.item()
+        loss.backward()
+        optimizer.step()
+    epoch_loss = running_loss / len(train_loader)
+    losses.append(epoch_loss)
+    print(f"Epoch {epoch} - Loss: {epoch_loss:.5f}")
+
+    #validation
+    val_loss = 0
+    correct = 0
+    total = 0
+    classifier.eval()
+    with torch.no_grad():
+        for images, labels in val_loader:
+            images, labels = images.to(device), labels.to(device)
+            outputs = classifier(images)
+            loss = lossFn(outputs, labels)
+            val_loss += loss.item()
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted==labels).sum().item()
+        avg_val_loss = val_loss / len(val_loader)
+        print(f"Validation Loss: {avg_val_loss:.3f}")
+print(f"Final Validation Loss: {avg_val_loss:.3f}")
+accuracy = 100 * correct / total
+print(f"Validation Accuracy: {accuracy:.3f}%")
+
+torch.save(classifier.state_dict(), "classifier.pth")
+
+# plot the loss v epoch graph
+
+plt.plot(range(epochs), losses)
+plt.plot(epochs, [avg_val_loss], "g+")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.title("Loss vs Epochs")
+plt.show()
