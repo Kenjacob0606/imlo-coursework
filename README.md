@@ -1,1 +1,1 @@
-# imlo-coursework
+# imlo-coursework (Neural Network)
